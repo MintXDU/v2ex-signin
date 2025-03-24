@@ -6,6 +6,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import json
+import tempfile
 
 # 登录函数
 def login(driver, username, password):
@@ -77,7 +78,13 @@ def main():
     chrome_options = webdriver.ChromeOptions()
     # headless mode
     chrome_options.add_argument("--headless=new")
-
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-dev-tools")
+    chrome_options.add_argument("--no-zygote")
+    user_data_dir = tempfile.mkdtemp()
+    chrome_options.add_argument(f"--user-data-dir={user_data_dir}")
     # # 设置代理
     # PROXY = "127.0.0.1:7890"
     # chrome_options.add_argument('--proxy-server=http://%s' % PROXY)
