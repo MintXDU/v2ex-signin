@@ -4,6 +4,7 @@ from ocr import recognize_captcha
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 import json
 import tempfile
@@ -52,17 +53,18 @@ def sign_in(driver):
     # 执行签到操作
     driver.get('https://www.v2ex.com')
     # 通过 link_text 定位签到按钮
-    signin_button = driver.find_element(by=By.LINK_TEXT, value='领取今日的登录奖励')
-    # 如果没有该按钮，则说明已经签到过了
-    if len(signin_button) <= 0:
+    try:
+        signin_button = driver.find_element(by=By.LINK_TEXT, value='领取今日的登录奖励')
+        signin_button.click()
+    except NoSuchElementException:
+        # 如果没有该按钮，则说明已经签到过了
         print("已签到过了")
         return
-
-    signin_button.click()
 
     # 点击领取X铜币
     get_coin_button = driver.find_element(by=By.CLASS_NAME, value='super.normal.button')
     get_coin_button.click()
+    print("签到成功")
 
 # 主函数
 def main():
